@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rango</title>
+</head>
+<body>
+<main>
+  <img src="{% static "images/rango.png" %}" alt="Rango image">
+  <h1>Rango says here is the <strong>{{ boldmessage }}</strong> page.</h1>
+  <a href='/rango/'>Rango Home Page</a>
+  <p>&copy; This tutorial has been put together by Denis.</p>
+</main>
+</body>
+</html>
