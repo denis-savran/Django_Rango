@@ -1,19 +1,34 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load static %}
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Rango</title>
-</head>
-<body>
-<main>
+
+{% block body_block %}
   <img src="{% static "images/rango.png" %}" alt="Rango image"/>
-  <img src="{{ MEDIA_URL }}images/production.jpg" alt="Production image" style="width: 200px; height: 200px"/>
   <h1>Rango says...</h1>
   <div>
     <p>Hey there partner! <br><strong>{{ boldmessage }}</strong></p>
   </div>
-  <div><a href="/rango/about/">About</a></div>
-</main>
-</body>
-</html>
+  <div>
+    {% if categories.exists %}
+      <h1>Most Liked Categories</h1>
+      <ul>
+        {% for category in categories %}
+          <li><a href="{% url 'show_category' category.slug %}">{{ category.name }}</a> - {{ category.likes }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <strong>There are no categories present!</strong>
+    {% endif %}
+  </div>
+  <div>
+    {% if pages %}
+      <h1>Most Viewed Pages</h1>
+      <ul>
+        {% for page in pages %}
+          <li><a href="{{ page.url }}">{{ page.title }}</a> - {{ page.views }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <strong>There are no categories present!</strong>
+    {% endif %}
+  </div>
+{% endblock %}

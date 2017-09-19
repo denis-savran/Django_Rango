@@ -1,16 +1,12 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load static %}
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Rango</title>
-</head>
-<body>
-<main>
-  <img src="{% static "images/rango.png" %}" alt="Rango image">
+
+{% block title_block %}
+  About
+{% endblock %}
+
+{% block body_block %}
+  <img src="{{ MEDIA_URL }}images/normalno_delay.jpg" alt="Best slogan" style="width: 200px; height: 200px"/>
   <h1>Rango says here is the <strong>{{ boldmessage }}</strong> page.</h1>
-  <a href='/rango/'>Rango Home Page</a>
   <p>&copy; This tutorial has been put together by Denis.</p>
-</main>
-</body>
-</html>
+{% endblock %}
