@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from rango.forms import CategoryForm, PageForm
-from rango.models import Category, Page
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from django.contrib.auth.models import User
+from rango.models import Category, Page, UserProfile
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 
@@ -66,3 +67,38 @@ def add_page(request, category_name_slug):
 
     return render(request, 'rango/add_page.html',
                   context={'form': form, 'category': category})
+
+
+def register(request, registered=False):
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+
+            user.set_password(user.password)
+            user.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+
+            registered = True
+
+            return HttpResponseRedirect(reverse('register', args=(registered,)))
+            # return HttpResponseRedirect(reverse('register', args=(registered,)))
+            # return HttpResponseRedirect(reverse('register', kwargs={'registered': registered}))
+        else:
+            print(user_form.errors, profile_form.errors)
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request, 'rango/register.html', {'user_form': user_form,
+                                                   'profile_form': profile_form,
+                                                   'registered': registered})
