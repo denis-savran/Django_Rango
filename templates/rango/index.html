@@ -5,7 +5,11 @@
   <img src="{% static "images/rango.png" %}" alt="Rango image"/>
   <h1>Rango says...</h1>
   <div>
-    <p>Hey there partner! <br><strong>{{ boldmessage }}</strong></p>
+    {% if user.is_authenticated %}
+      <p>Howdy, <strong>{{ user.username|capfirst }}</strong>!</p>
+    {% else %}
+      <p>Hey there partner! <br><strong>{{ boldmessage }}</strong></p>
+    {% endif %}
   </div>
   <div>
     {% if categories.exists %}
