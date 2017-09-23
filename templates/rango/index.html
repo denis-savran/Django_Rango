@@ -10,6 +10,7 @@
     {% else %}
       <p>Hey there partner! <br><strong>{{ boldmessage }}</strong></p>
     {% endif %}
+    <p>You have already visited our site {{ visits }} time{{ visits|pluralize }}.</p>
   </div>
   <div>
     {% if categories.exists %}
