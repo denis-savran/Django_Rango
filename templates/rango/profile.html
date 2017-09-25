@@ -1,0 +1,15 @@
+{% extends 'rango/base.html' %}
+{% load static %}
+
+{% block title_block %}
+  User's Profile
+{% endblock %}
+
+{% block body_block %}
+  {% if user_profile %}
+    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture">
+  {% endif %}
+  <p>{{ user.username }}</p>
+  <p>{{ user.email }}</p>
+  <a href="{% url 'auth_password_change' %}">Change password</a>
+{% endblock %}
