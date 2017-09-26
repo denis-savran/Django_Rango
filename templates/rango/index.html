@@ -1,10 +1,10 @@
-{% extends 'rango/base.html' %}
+{% extends 'rango/base_bootstrap.html' %}
 {% load static %}
 
 {% block body_block %}
-  <img src="{% static "images/rango.png" %}" alt="Rango image"/>
-  <h1>Rango says...</h1>
-  <div>
+  <div class="jumbotron text-center">
+    <img src="{% static "images/rango.png" %}" alt="Rango image"/>
+    <h1 class="display-3">Rango says...</h1>
     {% if user.is_authenticated %}
       <p>Howdy, <strong>{{ user.username|capfirst }}</strong>!</p>
     {% else %}
@@ -12,28 +12,30 @@
     {% endif %}
     <p>You have already visited our site {{ visits }} time{{ visits|pluralize }}.</p>
   </div>
-  <div>
-    {% if categories.exists %}
-      <h1>Most Liked Categories</h1>
-      <ul>
-        {% for category in categories %}
-          <li><a href="{% url 'show_category' category.slug %}">{{ category.name }}</a> - {{ category.likes }}</li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <strong>There are no categories present!</strong>
-    {% endif %}
-  </div>
-  <div>
-    {% if pages %}
-      <h1>Most Viewed Pages</h1>
-      <ul>
-        {% for page in pages %}
-          <li><a href="{{ page.url }}">{{ page.title }}</a> - {{ page.views }}</li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <strong>There are no categories present!</strong>
-    {% endif %}
+  <div class="row">
+    <div class="col-lg-6">
+      {% if categories.exists %}
+        <h1>Most Liked Categories</h1>
+        <ul class="list-group">
+          {% for category in categories %}
+            <a class="page-link list-group-item" href="{% url 'show_category' category.slug %}"><li class="">{{ category.name }} - {{ category.likes }} like{{ category.likes|pluralize }}</li></a>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <strong>There are no categories present!</strong>
+      {% endif %}
+    </div>
+    <div class="col-lg-6">
+      {% if pages %}
+        <h1>Most Viewed Pages</h1>
+        <ul class="list-group">
+          {% for page in pages %}
+            <a class="page-link list-group-item" href="{{ page.url }}"><li class="">{{ page.title }} - {{ page.views }} views{{ page.views|pluralize }}</li></a>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <strong>There are no categories present!</strong>
+      {% endif %}
+    </div>
   </div>
 {% endblock %}

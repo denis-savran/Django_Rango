@@ -1,4 +1,4 @@
-{% extends 'rango/base.html' %}
+{% extends 'rango/base_bootstrap.html' %}
 {% load static %}
 
 {% block title_block %}
@@ -6,9 +6,10 @@
 {% endblock %}
 
 {% block body_block %}
+  <h1 class="jumbotron">Add Page</h1>
   {% if category %}
-    <h1>Add a Page to {{ category.name }}</h1>
     <form id="page_form" method="post" action="{% url 'add_page' category.slug %}">
+      <h2>Add page to {{ category.name }}</h2>
       {% csrf_token %}
       {% for hidden in form.hidden_fields %}
         {{ hidden }}
@@ -16,13 +17,16 @@
       {% for field in form.visible_fields %}
         {{ field.errors }}
         {{ field.help_text }}
-        {{ field }}
+        {% if forloop.counter == 1 %}
+          <input class="col-2 form-control mb-1" type="text" name="title" maxlength="128" required id="id_title" placeholder="Some Title"/>
+        {% else %}
+          <input class="col-2 form-control" type="url" name="url" maxlength="200" required id="id_url" placeholder="http://example.com/"/>
+        {% endif %}
       {% endfor %}
-      <input type="submit" name="submit" value="Create Page">
+      <button class="btn btn-primary mt-2" type="submit" name="submit">Create page</button>
     </form>
     <p><a href="{% url 'show_category' category.slug %}">Back to category contents</a></p>
   {% else %}
-    <h1>Add a Page</h1>
     <p>The specified category does not exist!</p>
     <a href="{% url 'index' %}">Home</a>
   {% endif %}

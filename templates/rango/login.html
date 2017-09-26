@@ -1,8 +1,8 @@
-{% extends 'rango/base.html' %}
+{% extends 'rango/base_bootstrap.html' %}
 {% load static %}
 
 {% block title_block %}
-  Login
+  Sing in
 {% endblock title_block %}
 
 {% block body_block %}
@@ -10,12 +10,12 @@
   <form id="login_form" action="{% url 'login' %}" method="post">
     {% csrf_token %}
     <p>
-      <label for="username">Username:</label>
-      <input id="username" type="text" value="" name="username">
+      <label for="id_username">Username:</label>
+      <input class="form-control" id="id_username" type="text" name="username" required autofocus>
     </p>
     <p>
-      <label for="password">Password:</label>
-      <input id="password" type="password" value="" name="password">
+      <label for="id_password">Password:</label>
+      <input class="form-control" id="id_password" type="password" value="" name="password" required>
     </p>
     <input type="submit" value="Submit" name="submit">
   </form>

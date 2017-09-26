@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="icon" href="{% static 'rango/img/favicon.svg' %}">
+  <link rel="icon" href="{% static 'rango/img/chamelion.svg' %}">
 
-  <title>Rango - {% block title_block %}{% endblock %}</title>
+  <title>Rango - Home{% block title_block %}{% endblock %}</title>
 
   <!-- Bootstrap core CSS -->
   <link href="{% static 'rango/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -20,37 +20,30 @@
 
 <body>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+  <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbar"
           aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  <a class="navbar-brand" href="{% url 'index' %}">Rango</a>
+  <div class="collapse navbar-collapse" id="navbar">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url 'index' %}">Home<span class="sr-only">(current)</span></a>
-      </li>
-      {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'add_category' %}">Add Category</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'show_profile' %}">Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'auth_logout' %}">Sing out</a>
-        </li>
-      {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'auth_login' %}">Sing in</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'registration_register' %}">Register</a>
-        </li>
-      {% endif %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'about' %}">About<span class="sr-only">(current)</span></a>
-      </li>
+      {% with request.resolver_match.url_name as current_url_name %}
+        {% dynamic_nav_item current_url_name 'index' 'Home' %}
+
+        {% if user.is_authenticated %}
+          {% dynamic_nav_item current_url_name 'add_category' 'Add Category' %}
+          {% dynamic_nav_item current_url_name 'show_profile' 'Profile' %}
+          {# There is no logout page so it can be left static, also we need to specify a redirect link #}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'auth_logout' %}?next={% url 'index' %}">Sing out</a>
+          </li>
+        {% else %}
+          {% dynamic_nav_item current_url_name 'auth_login' 'Sing in' %}
+          {% dynamic_nav_item current_url_name 'registration_register' 'Register' %}
+        {% endif %}
+
+        {% dynamic_nav_item current_url_name 'about' 'About' %}
+      {% endwith %}
     </ul>
     <form class="form-inline mt-2 mt-md-0">
       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">

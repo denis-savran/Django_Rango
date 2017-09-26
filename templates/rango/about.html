@@ -1,4 +1,4 @@
-{% extends 'rango/base.html' %}
+{% extends 'rango/base_bootstrap.html' %}
 {% load static %}
 
 {% block title_block %}
@@ -8,5 +8,5 @@
 {% block body_block %}
   <img src="{{ MEDIA_URL }}images/normalno_delay.jpg" alt="Best slogan" style="width: 200px; height: 200px"/>
   <h1>Rango says here is the <strong>{{ boldmessage }}</strong> page.</h1>
-  <p>&copy; This tutorial has been put together by Denis.</p>
+  <p>&copy; This site has been put together by Denis.</p>
 {% endblock %}

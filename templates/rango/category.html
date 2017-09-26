@@ -1,8 +1,13 @@
-{% extends 'rango/base.html' %}
+{% extends 'rango/base_bootstrap.html' %}
 {% load static %}
+{% load rango_template_tags %}
 
 {% block title_block %}
   {{ category.name }}
+{% endblock %}
+
+{% block sidebar_block %}
+  {% get_category_list category %}
 {% endblock %}
 
 {% block body_block %}
