@@ -4,29 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from registration.backends.simple.views import RegistrationView
-from django.contrib.auth.views import LogoutView, PasswordChangeView
 
 from rango.forms import CategoryForm, PageForm
 from rango.models import Category, Page, UserProfile
-
-
-# class MyRegistrationView(RegistrationView):
-#     def get_success_url(self, user):
-#         # return reverse('admin')
-#         return reverse('index')
-
-
-# class MyPasswordChangeView(PasswordChangeView):
-#     def get_success_url(self):
-#         return reverse('show_profile')
-#         return reverse('show_profile', urlconf='rango.urls')
-#         return '/rango/profile/'
-#     success_url = '/rango/profile/'
-
-# class MyLogoutView(LogoutView):
-#     def get_next_page(self):
-#         return reverse('index')
 
 
 def index(request):

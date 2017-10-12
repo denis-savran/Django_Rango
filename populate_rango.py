@@ -1,12 +1,14 @@
 import os
 import random
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Django_Rango.settings')
-
 import django
 
-django.setup()
 from rango.models import Category, Page
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Django_Rango.settings')
+
+
+django.setup()
 
 
 def add_cat(name, views, likes):

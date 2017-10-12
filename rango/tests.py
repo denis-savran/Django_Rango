@@ -1,7 +1,6 @@
-from django.test import TestCase
-from django.core.urlresolvers import reverse
 from django.contrib.staticfiles import finders
-
+from django.core.urlresolvers import reverse
+from django.test import TestCase
 
 # Thanks to Enzo Roiz https://github.com/enzoroiz who made these tests during an internship with us
 
