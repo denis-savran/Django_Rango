@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from rango.forms import CategoryForm, PageForm
 from rango.models import Category, Page, UserProfile
+from rango.utils import visitor_cookie_handler
 
 
 def index(request):
@@ -75,30 +76,7 @@ def add_page(request, category_name_slug):
         else:
             print(form.errors)
 
-    return render(request, 'rango/add_page.html',
-                  context={'form': form, 'category': category})
-
-
-def get_server_side_cookie(request, cookie, default_val=None):
-    val = request.session.get(cookie)
-    if not val:
-        val = default_val
-    return val
-
-
-def visitor_cookie_handler(request):
-    visits = int(get_server_side_cookie(request, 'visits', 1))
-
-    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
-    last_visit_datetime = datetime.strptime(last_visit_cookie, '%Y-%m-%d %H:%M:%S.%f')
-
-    if (datetime.now() - last_visit_datetime).days > 0:
-        visits = visits + 1
-        request.session['last_visit'] = str(datetime.now())
-    else:
-        request.session['last_visit'] = last_visit_cookie
-
-    request.session['visits'] = visits
+    return render(request, 'rango/add_page.html', context={'form': form, 'category': category})
 
 
 @login_required
