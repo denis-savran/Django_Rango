@@ -35,8 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
+    'registration',
     'rango',
-    'registration'
 ]
 
 MIDDLEWARE = [
@@ -126,8 +127,15 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/static/'
 
-
 # Media files
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Elasticsearch dsl settings
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
