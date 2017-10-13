@@ -19,6 +19,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_most_viewed(cls):
+        return cls.objects.order_by('-views')[:5]
+
 
 class Page(models.Model):
     category = models.ForeignKey(Category)
@@ -28,6 +32,10 @@ class Page(models.Model):
 
     def __str__(self):
         return self.title
+
+    @classmethod
+    def get_most_viewed(cls):
+        return cls.objects.order_by('-views')[:5]
 
 
 class UserProfile(models.Model):
