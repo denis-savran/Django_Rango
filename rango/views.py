@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
 from rango.forms import CategoryForm, PageForm
@@ -29,16 +29,12 @@ def about(request):
 
 def show_category(request, category_name_slug):
     context_dict = {}
-    try:
-        category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
 
-        pages = Page.objects.filter(category=category)
+    pages = Page.objects.filter(category=category)
 
-        context_dict['pages'] = pages
-        context_dict['category'] = category
-    except Category.DoesNotExist:
-        context_dict['pages'] = None
-        context_dict['category'] = None
+    context_dict['pages'] = pages
+    context_dict['category'] = category
     return render(request, 'rango/category.html', context=context_dict)
 
 
@@ -49,8 +45,7 @@ def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            cat = form.save(commit=True)
-            print(cat, cat.slug)
+            form.save()
             return index(request)
         else:
             print(form.errors)
@@ -60,17 +55,13 @@ def add_category(request):
 
 @login_required
 def add_page(request, category_name_slug):
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-        form = PageForm(initial={'category': category.id})
-    except Category.DoesNotExist:
-        category = None
-        form = None
+    category = get_object_or_404(Category, slug=category_name_slug)
+    form = PageForm(initial={'category': category.id})
 
     if request.method == 'POST':
         form = PageForm(request.POST)
         if form.is_valid():
-            page = form.save(commit=True)
+            page = form.save()
             print(page, page.url)
             return HttpResponseRedirect(reverse('show_category', args=(category_name_slug,)))
         else:
