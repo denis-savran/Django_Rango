@@ -1,10 +1,10 @@
-from datetime import datetime
-
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
+from rango.documents import (CategoryDocument, PageDocument,
+                             search_all_doc_types)
 from rango.forms import CategoryForm, PageForm
 from rango.models import Category, Page, UserProfile
 from rango.utils import visitor_cookie_handler
@@ -80,3 +80,20 @@ def show_profile(request):
     context_dict = {'user_profile': user_profile}
 
     return render(request, 'rango/profile.html', context=context_dict)
+
+
+def search(request):
+    context_dict = {}
+
+    q = request.GET.get('q')
+    if q:
+        if request.GET.get('categories'):
+            search_result = CategoryDocument.search().filter('match', name=q).to_queryset()
+            context_dict['categories'] = search_result
+        if request.GET.get('pages'):
+            search_result = PageDocument.search().filter('match', title=q).to_queryset()
+            context_dict['pages'] = search_result
+        if len(request.GET) == 1:
+            search_result = search_all_doc_types(q)
+            context_dict.update(search_result)
+    return render(request, 'rango/search.html', context=context_dict)

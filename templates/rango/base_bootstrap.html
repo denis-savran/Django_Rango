@@ -45,10 +45,13 @@
         {% dynamic_nav_item current_url_name 'about' 'About' %}
       {% endwith %}
     </ul>
-    <form class="form-inline mt-2 mt-md-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    {% block search_block %}
+      <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'search' %}">
+        <input class="form-control mr-sm-2" name="q" type="text" value="{{ request.GET.q }}" placeholder="Search"
+               aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    {% endblock %}
   </div>
 </nav>
 
