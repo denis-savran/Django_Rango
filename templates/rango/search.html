@@ -21,7 +21,7 @@
           <ul>
             {% for category in categories %}
               <li>
-                <a href="{% url 'show_category' category.slug %}">{{ category.name }}</a>
+                <a href="{{ category.get_url }}">{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -31,7 +31,7 @@
           <ul>
             {% for page in pages %}
               <li>
-                <a href="{{ page.url }}">{{ page.title }}</a>
+                <a href="{{ page.get_url }}">{{ page }}</a>
               </li>
             {% endfor %}
           </ul>
