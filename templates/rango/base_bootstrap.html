@@ -9,7 +9,7 @@
   <meta name="author" content="">
   <link rel="icon" href="{% static 'rango/img/chamelion.svg' %}">
 
-  <title>Rango - Home{% block title_block %}{% endblock %}</title>
+  <title>{% block title_block %}Rango{% endblock %}</title>
 
   <!-- Bootstrap core CSS -->
   <link href="{% static 'rango/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -45,13 +45,11 @@
         {% dynamic_nav_item current_url_name 'about' 'About' %}
       {% endwith %}
     </ul>
-    {% block search_block %}
-      <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'search' %}">
-        <input class="form-control mr-sm-2" name="q" type="text" value="{{ request.GET.q }}" placeholder="Search"
-               aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
-    {% endblock %}
+    <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'search' %}">
+      <input class="form-control mr-sm-2" name="q" type="text" value="{{ request.GET.q }}" placeholder="Search"
+             aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
   </div>
 </nav>
 

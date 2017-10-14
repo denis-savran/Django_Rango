@@ -1,7 +1,12 @@
 {% extends 'rango/base_bootstrap.html' %}
 {% load static %}
 
+{% block title_block %}
+  Registration
+{% endblock %}
+
 {% block body_block %}
-  <h1>Registration Complete</h1>
+  <h1 class="jumbotron">Registration Complete</h1>
+  <p>You are now a member of Rango!</p>
   <a href="{% url 'index' %}">Home</a>
 {% endblock %}

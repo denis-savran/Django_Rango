@@ -1,14 +1,20 @@
 {% extends 'rango/base_bootstrap.html' %}
+{% load static %}
+
+{% block title_block %}
+  Search
+{% endblock %}
 
 {% block body_block %}
-  <h2>Search</h2>
+  <h1 class="jumbotron">Search</h1>
 
   <form method="get" action="{% url 'search' %}">
     <input class="form-control mr-sm-2 mb-1" name="q" type="text" value="{{ request.GET.q }}" placeholder="Search"
            aria-label="Search">
+    <span class="text-info mr-1">Show:</span>
     <label for="category-box">categories</label>
     <input class="ml-1" id="category-box" name="categories" value="1" type="checkbox">
-    <label class="ml-3" for="page-box">pages</label>
+    <label class="ml-2" for="page-box">pages</label>
     <input class="ml-1" id="page-box" name="pages" value="1" type="checkbox">
     <button class="btn btn-outline-success my-2 my-sm-0 d-block" type="submit">Search</button>
   </form>
