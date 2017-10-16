@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.views.decorators.http import require_GET, require_safe
+from elasticsearch_dsl.query import Q
 
 from rango.documents import (CategoryDocument, PageDocument,
                              search_all_doc_types)
@@ -87,18 +88,27 @@ def show_profile(request):
 @require_GET
 def search(request):
     context_dict = {}
+    category_list = Category.objects.values_list('name', flat=True)
+    context_dict['category_list'] = category_list
 
     q = request.GET.get('q')
     if q:
-        if request.GET.get('categories'):
-            search_result = CategoryDocument.search().filter('match', name=q).to_queryset()
-            context_dict['categories'] = search_result
-        if request.GET.get('pages'):
-            search_result = PageDocument.search().filter('match', title=q).to_queryset()
-            context_dict['pages'] = search_result
         if len(request.GET) == 1:
             search_result = search_all_doc_types(q)
             context_dict.update(search_result)
+        else:
+            category = request.GET.get('category')
+            if category:
+                complex_query = Q('bool', must=[Q('match', category__name=category), Q('match', title=q)])
+                search_result = PageDocument.search().filter(complex_query).to_queryset()
+                context_dict['pages'] = search_result
+            else:
+                if request.GET.get('categories'):
+                    search_result = CategoryDocument.search().filter('match', name=q).to_queryset()
+                    context_dict['categories'] = search_result
+                if request.GET.get('pages'):
+                    search_result = PageDocument.search().filter('match', title=q).to_queryset()
+                    context_dict['pages'] = search_result
     return render(request, 'rango/search.html', context=context_dict)
 
 

@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from django.db.models import Case, When
-from django_elasticsearch_dsl import DocType, Index
+from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.connections import connections
 
 from Django_Rango.settings import ELASTICSEARCH_DSL
@@ -30,12 +30,17 @@ class CategoryDocument(DocType):
 
 @rango.doc_type
 class PageDocument(DocType):
+    category = fields.ObjectField(properties={
+        'name': fields.StringField()
+    })
+
     class Meta:
         model = Page
 
         fields = [
             'title',
         ]
+        related_models = [Category]
 
 
 def get_qs_with_specified_order(model, order):
