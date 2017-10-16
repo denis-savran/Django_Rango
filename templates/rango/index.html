@@ -39,7 +39,7 @@
         <ul class="list-group">
           {% for page in pages %}
             <li class="page-link list-group-item p-0">
-              <a class="nav-link p-3" href="{{ page.get_url }}">
+              <a class="nav-link p-3" href="{% url 'goto' %}?page_id={{ page.id }}">
                 {{ page }} - {{ page.views }} view{{ page.views|pluralize }}
               </a>
             </li>

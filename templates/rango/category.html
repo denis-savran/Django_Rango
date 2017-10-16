@@ -17,7 +17,7 @@
       {% if pages %}
         <ul>
           {% for page in pages %}
-            <li><a href="{{ page.get_url }}" target="_blank">{{ page }}</a></li>
+            <li><a href="{% url 'goto' %}?page_id={{ page.id }}" target="_blank">{{ page }}</a></li>
           {% endfor %}
         </ul>
       {% else %}

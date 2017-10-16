@@ -1,8 +1,7 @@
 from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.views.decorators.http import require_GET, require_safe
 
 from rango.documents import (CategoryDocument, PageDocument,
@@ -68,7 +67,7 @@ def add_page(request, category_name_slug):
         if form.is_valid():
             page = form.save()
             print(page, page.url)
-            return HttpResponseRedirect(reverse('show_category', args=(category_name_slug,)))
+            return redirect('show_category', category_name_slug)
         else:
             print(form.errors)
 
@@ -101,3 +100,17 @@ def search(request):
             search_result = search_all_doc_types(q)
             context_dict.update(search_result)
     return render(request, 'rango/search.html', context=context_dict)
+
+
+def track_url(request):
+    page_id = request.GET.get('page_id')
+
+    if page_id:
+        page = get_object_or_404(Page, id=page_id)
+        page.views += 1
+        page.save()
+        redirect_url = page.get_url()
+    else:
+        redirect_url = reverse('index')
+
+    return redirect(redirect_url)
