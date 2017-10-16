@@ -9,27 +9,19 @@
   <h1 class="jumbotron">Register Here</h1>
   <form action="" method="post">
     {% csrf_token %}
-    <div class="form-group col-3">
-      <h2>Create an account</h2>
-      <p>
-        <label class="m-0" for="id_username">Username:</label>
-        <input class="form-control" id="id_username" maxlength="30" name="username" type="text" required
-               data-toggle="tooltip" title="Username must 30 characters long or fewer. Letters, digits and @/./+/-/_ only."/>
-      </p>
-      <p>
-        <label class="m-0" for="id_email">E-mail:</label>
-        <input class="form-control" id="id_email" name="email" type="email" required/>
-      </p>
-      <p>
-        <label class="m-0" for="id_password1">Password:</label>
-        <input class="form-control" id="id_password1" name="password1" type="password" required data-toggle="tooltip"
-               title="Your password can&#39;t be too similar to your other personal information, must contain at least 8 characters, can&#39;t be a commonly used password, can&#39;t be entirely numeric."/>
-      </p>
-      <p>
-        <label class="m-0" for="id_password2">Password confirmation:</label>
-        <input class="form-control" id="id_password2" name="password2" type="password" required/>
-      </p>
-    </div>
+    <fieldset>
+      {% for field in form %}
+        <div class="form-group {% if field.errors %}errors{% endif %}">
+          <label class="form-control-label mb-0">{{ field.label }}</label>
+          <div class="form-control-plaintext">
+            {{ field }}
+            {% for error in field.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </fieldset>
     <button class="btn btn-primary mt-2" type="submit" name="submit">Register</button>
   </form>
 {% endblock %}

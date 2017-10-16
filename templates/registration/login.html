@@ -13,11 +13,19 @@
     <form class="col-2" role="form" action="" method="post">
       <h2>Please sign in</h2>
       {% csrf_token %}
-      <label class="sr-only" for="username">Username</label>
-      <input class="form-control mt-2 mb-1" id="id_username" type="text" name="username" placeholder="Username" required
-             autofocus>
-      <label class="sr-only" for="password">Password</label>
-      <input class="form-control" id="id_password" type="password" name="password" placeholder="Password" required>
+      <fieldset>
+        {% for field in form %}
+          <div class="form-group {% if field.errors %}errors{% endif %}">
+            <label class="form-control-label">{{ field.label }}</label>
+            <div class="form-control-plaintext">
+              {{ field }}
+              {% for error in field.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </fieldset>
       <button class="btn btn-lg btn-primary btn-block mt-2" type="submit" value="Submit">Sign in</button>
     </form>
   </div>

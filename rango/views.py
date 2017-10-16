@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.decorators.http import require_GET, require_safe
 from elasticsearch_dsl.query import Q
+from registration.backends.default.views import RegistrationView
 
 from rango.documents import (CategoryDocument, PageDocument,
                              search_all_doc_types)
-from rango.forms import CategoryForm, PageForm
+from rango.forms import CategoryForm, PageForm, UserProfileForm
 from rango.models import Category, Page, UserProfile
 from rango.utils import visitor_cookie_handler
 
@@ -112,6 +112,7 @@ def search(request):
     return render(request, 'rango/search.html', context=context_dict)
 
 
+@require_GET
 def track_url(request):
     page_id = request.GET.get('page_id')
 
@@ -124,3 +125,8 @@ def track_url(request):
         redirect_url = reverse('index')
 
     return redirect(redirect_url)
+
+
+# class MyRegistrationView(RegistrationView):
+#     def get_success_url(self):
+#         return 1

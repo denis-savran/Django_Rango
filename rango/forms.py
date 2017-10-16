@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from registration.forms import RegistrationForm
 
 from rango.models import Category, Page, UserProfile
 
@@ -55,7 +56,16 @@ class UserForm(forms.ModelForm):
         }
 
 
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ('website', 'picture')
+class UserProfileForm(RegistrationForm):
+    website = forms.URLField(required=False)
+    picture = forms.FileField(required=False)
+
+    # class Meta:
+    #     model = UserProfile
+    #     fields = ('website', 'picture')
+    def save(self, commit=True):
+        user = super(UserProfileForm, self).save()
+        website = self.cleaned_data['website']
+        picture = self.cleaned_data['picture']
+        user_profile = UserProfile.objects.create(user=user, website=website, picture=picture)
+        return user
