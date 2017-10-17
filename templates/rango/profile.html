@@ -2,20 +2,21 @@
 {% load static %}
 
 {% block title_block %}
-  User's Profile
+  User {{ username }}
 {% endblock %}
 
 {% block body_block %}
-  <p>{{ user.username }}</p>
-  <p>{{ user.email }}</p>
-  {% if user_profile %}
-    {% if user_profile.picture %}
-      <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture">
-    {% endif %}
-    {% if user_profile.website %}
-      <p>{{ user_profile.website }}</p>
-    {% endif %}
+  <h1 class="jumbotron">Profile</h1>
+  {% if user_profile.picture %}
+    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture">
   {% endif %}
-  <p><a href="{% url 'edit_profile' %}">Edit profile</a></p>
-  <p><a href="{% url 'auth_password_change' %}">Change password</a></p>
+  <p>User: {{ username }}</p>
+  <p>Email: {{ user.email }}</p>
+  {% if user_profile.website %}
+    <p>Website: {{ user_profile.website }}</p>
+  {% endif %}
+  {% if user.is_authenticated and user.username == username %}
+    <p><a href="{% url 'edit_profile' %}">Edit profile</a></p>
+    <p><a href="{% url 'auth_password_change' %}">Change password</a></p>
+  {% endif %}
 {% endblock %}

@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.decorators.http import require_GET, require_safe
+from django.views.generic import ListView
 from elasticsearch_dsl.query import Q
 from registration.backends.simple.views import RegistrationView
 
@@ -75,17 +76,56 @@ def add_page(request, category_name_slug):
     return render(request, 'rango/add_page.html', context={'form': form, 'category': category})
 
 
-@login_required
 @require_GET
-def show_profile(request):
+def show_profile(request, username):
+    user = get_object_or_404(User, username=username)
     try:
-        # user_profile = get_object_or_404(UserProfile, user=request.user)
-        user_profile = UserProfile.objects.get(user=request.user)
+        user_profile = UserProfile.objects.get(user=user)
     except UserProfile.DoesNotExist:
         user_profile = None
-    context_dict = {'user_profile': user_profile}
+    context_dict = {'user_profile': user_profile,
+                    'username': username}
 
     return render(request, 'rango/profile.html', context=context_dict)
+
+
+@login_required
+def edit_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    user_profile = UserProfile.objects.get_or_create(user=user)[0]
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            update_fields = []
+            website = request.POST.get('website')
+            picture = request.FILES.get('picture')
+            if website:
+                user_profile.website = website
+                update_fields.append('website')
+            if picture:
+                # Delete old profile picture if it exists
+                if user_profile.picture:
+                    user_profile.picture.delete()
+
+                picture = resize_image(picture)
+
+                user_profile.picture = picture
+                update_fields.append('picture')
+            if update_fields:
+                user_profile.save(update_fields=update_fields)
+            return redirect('show_profile')
+    else:
+        form = UserProfileForm()
+    return render(request, 'rango/edit_profile.html', context={'form': form,
+                                                               'user_profile': user_profile,
+                                                               'new_user': request.GET.get('new_user')})
+
+
+class ShowMembersView(ListView):
+    template_name = 'rango/list_profiles.html'
+
+    def get_queryset(self):
+        return User.objects.all()
 
 
 @require_GET
@@ -136,35 +176,3 @@ class MyRegistrationView(RegistrationView):
         # Add GET parameter to get customized edit_profile
         redirect_link = redirect_link + '?new_user=1'
         return redirect_link
-
-
-@login_required
-def edit_profile(request):
-    user = request.user
-    user_profile = UserProfile.objects.get_or_create(user=user)[0]
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES)
-        if form.is_valid():
-            update_fields = []
-            website = request.POST.get('website')
-            picture = request.FILES.get('picture')
-            if website:
-                user_profile.website = website
-                update_fields.append('website')
-            if picture:
-                # Delete old profile picture if it exists
-                if user_profile.picture:
-                    user_profile.picture.delete()
-
-                picture = resize_image(picture)
-
-                user_profile.picture = picture
-                update_fields.append('picture')
-            if update_fields:
-                user_profile.save(update_fields=update_fields)
-            return redirect('show_profile')
-    else:
-        form = UserProfileForm()
-    return render(request, 'rango/edit_profile.html', context={'form': form,
-                                                               'user_profile': user_profile,
-                                                               'new_user': request.GET.get('new_user')})
