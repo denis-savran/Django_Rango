@@ -32,7 +32,7 @@
 
         {% if user.is_authenticated %}
           {% dynamic_nav_item current_url_name 'add_category' 'Add Category' %}
-          {% dynamic_nav_item current_url_name 'show_profile' 'Profile' %}
+          {% dynamic_nav_item current_url_name 'show_profile' 'Profile' user.username %}
           {# There is no logout page so it can be left static, also we need to specify a redirect link #}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'auth_logout' %}?next={% url 'index' %}">Sing out</a>
