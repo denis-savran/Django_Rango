@@ -6,10 +6,16 @@
 {% endblock %}
 
 {% block body_block %}
-  {% if user_profile %}
-    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture">
-  {% endif %}
   <p>{{ user.username }}</p>
   <p>{{ user.email }}</p>
-  <a href="{% url 'auth_password_change' %}">Change password</a>
+  {% if user_profile %}
+    {% if user_profile.picture %}
+      <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture">
+    {% endif %}
+    {% if user_profile.website %}
+      <p>{{ user_profile.website }}</p>
+    {% endif %}
+  {% endif %}
+  <p><a href="{% url 'edit_profile' %}">Edit profile</a></p>
+  <p><a href="{% url 'auth_password_change' %}">Change password</a></p>
 {% endblock %}

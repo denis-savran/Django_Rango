@@ -3,13 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.decorators.http import require_GET, require_safe
 from elasticsearch_dsl.query import Q
-from registration.backends.default.views import RegistrationView
+from registration.backends.simple.views import RegistrationView
 
 from rango.documents import (CategoryDocument, PageDocument,
                              search_all_doc_types)
 from rango.forms import CategoryForm, PageForm, UserProfileForm
 from rango.models import Category, Page, UserProfile
-from rango.utils import visitor_cookie_handler
+from rango.utils import resize_image, visitor_cookie_handler
 
 
 @require_safe
@@ -45,8 +45,6 @@ def show_category(request, category_name_slug):
 
 @login_required
 def add_category(request):
-    form = CategoryForm()
-
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
@@ -54,6 +52,8 @@ def add_category(request):
             return index(request)
         else:
             print(form.errors)
+    else:
+        form = CategoryForm()
 
     return render(request, 'rango/add_category.html', context={'form': form})
 
@@ -61,16 +61,16 @@ def add_category(request):
 @login_required
 def add_page(request, category_name_slug):
     category = get_object_or_404(Category, slug=category_name_slug)
-    form = PageForm(initial={'category': category.id})
 
     if request.method == 'POST':
         form = PageForm(request.POST)
         if form.is_valid():
             page = form.save()
-            print(page, page.url)
             return redirect('show_category', category_name_slug)
         else:
             print(form.errors)
+    else:
+        form = PageForm(initial={'category': category.id})
 
     return render(request, 'rango/add_page.html', context={'form': form, 'category': category})
 
@@ -78,11 +78,14 @@ def add_page(request, category_name_slug):
 @login_required
 @require_GET
 def show_profile(request):
-    # user = request.user
-    # user_profile = get_object_or_404(UserProfile, user=user)
-    # context_dict = {'user_profile': user_profile}
+    try:
+        # user_profile = get_object_or_404(UserProfile, user=request.user)
+        user_profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        user_profile = None
+    context_dict = {'user_profile': user_profile}
 
-    return render(request, 'rango/profile.html')
+    return render(request, 'rango/profile.html', context=context_dict)
 
 
 @require_GET
@@ -127,6 +130,41 @@ def track_url(request):
     return redirect(redirect_url)
 
 
-# class MyRegistrationView(RegistrationView):
-#     def get_success_url(self):
-#         return 1
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user=None):
+        redirect_link = reverse('edit_profile')
+        # Add GET parameter to get customized edit_profile
+        redirect_link = redirect_link + '?new_user=1'
+        return redirect_link
+
+
+@login_required
+def edit_profile(request):
+    user = request.user
+    user_profile = UserProfile.objects.get_or_create(user=user)[0]
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            update_fields = []
+            website = request.POST.get('website')
+            picture = request.FILES.get('picture')
+            if website:
+                user_profile.website = website
+                update_fields.append('website')
+            if picture:
+                # Delete old profile picture if it exists
+                if user_profile.picture:
+                    user_profile.picture.delete()
+
+                picture = resize_image(picture)
+
+                user_profile.picture = picture
+                update_fields.append('picture')
+            if update_fields:
+                user_profile.save(update_fields=update_fields)
+            return redirect('show_profile')
+    else:
+        form = UserProfileForm()
+    return render(request, 'rango/edit_profile.html', context={'form': form,
+                                                               'user_profile': user_profile,
+                                                               'new_user': request.GET.get('new_user')})

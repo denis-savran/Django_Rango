@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
-from registration.forms import RegistrationForm
 
-from rango.models import Category, Page, UserProfile
+# from rango.models import Category, Page, UserProfile
+from rango.models import Category, Page
 
 
 class CategoryForm(forms.ModelForm):
@@ -56,16 +56,13 @@ class UserForm(forms.ModelForm):
         }
 
 
-class UserProfileForm(RegistrationForm):
+class UserProfileForm(forms.Form):
     website = forms.URLField(required=False)
-    picture = forms.FileField(required=False)
+    picture = forms.ImageField(required=False)
+
+    # Initial value is passed in view via initial kwarg
+    # user = forms.ModelChoiceField(widget=forms.HiddenInput, queryset=User.objects.all())
 
     # class Meta:
     #     model = UserProfile
-    #     fields = ('website', 'picture')
-    def save(self, commit=True):
-        user = super(UserProfileForm, self).save()
-        website = self.cleaned_data['website']
-        picture = self.cleaned_data['picture']
-        user_profile = UserProfile.objects.create(user=user, website=website, picture=picture)
-        return user
+    #     fields = ('user', 'website', 'picture')

@@ -105,7 +105,7 @@ ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_AUTOLOGIN = True
 LOGIN_REDIRECT_URL = '/rango/'
 LOGIN_URL = '/accounts/login/'
-REGISTRATION_FORM = 'rango.forms.UserProfileForm'
+# REGISTRATION_FORM = 'rango.forms.UserProfileForm'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

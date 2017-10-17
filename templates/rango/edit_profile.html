@@ -1,0 +1,52 @@
+{% extends 'rango/base_bootstrap.html' %}
+{% load static %}
+
+{% block title_block %}
+  Edit Profile
+{% endblock %}
+
+{% block body_block %}
+  <h1 class="jumbotron">Edit Profile</h1>
+  <div class="row">
+    <div class="col-6">
+      <form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset>
+          {% for field in form.visible_fields %}
+            <div class="form-group {% if field.errors %}errors{% endif %}">
+              <label class="form-control-label">{{ field.label }}</label>
+              <div class="form-control-plaintext">
+                {{ field }}
+                {% for error in field.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </fieldset>
+        <button class="btn btn-outline-success my-2 d-block" type="submit" value="Submit">Update Profile</button>
+      </form>
+    </div>
+    <div class="col-6">
+      {% if user_profile.picture %}
+        <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture">
+      {% endif %}
+      {% if user_profile.website %}
+        <p>Website: {{ user_profile.website }}</p>
+      {% endif %}
+    </div>
+  </div>
+  {% if new_user %}
+    <div class="row d-flex justify-content-center">
+      <div class="col-3 text-center">
+        <a class="page-link text-info" href="{% url 'show_profile' %}">Skip this step</a>
+      </div>
+    </div>
+  {% else %}
+    <div class="row d-flex justify-content-center">
+      <div class="col-3 text-center">
+        <a class="page-link" href="{% url 'show_profile' %}">Back to Profile</a>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
