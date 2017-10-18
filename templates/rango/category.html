@@ -13,7 +13,21 @@
 {% block body_block %}
   <div class="row">
     <div class="col-9">
-      <h1>{{ category }}</h1>
+      <div class="row">
+        <div class="col-6">
+          <h1>{{ category }}</h1>
+        </div>
+        <div class="col-3 d-flex justify-content-between p-1">
+          <div class="p-2">
+            This category has <span class="text-info" id="like_count">{{ category.likes }}</span> like{{ category.likes|pluralize }}
+          </div>
+          {% if user.is_authenticated %}
+            <div>
+              <button id="like" class="btn btn-outline-info" data-cat_id="{{ category.id }}">Like</button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
       {% if pages %}
         <ul>
           {% for page in pages %}

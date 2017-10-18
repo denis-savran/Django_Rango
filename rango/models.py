@@ -20,6 +20,9 @@ class Category(models.Model):
     def get_url(self):
         return reverse('show_category', args=(self.slug,))
 
+    def add_like(self):
+        self.likes += 1
+
     @classmethod
     def get_most_viewed(cls):
         return cls.objects.order_by('-views')[:5]
@@ -54,14 +57,13 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-
-# class MyPhoto(models.Model):
-#     image = ImageField()
-#
-#     def save(self, *args, **kwargs):
-#         if self.image:
-#             self.image = get_thumbnail(self.image, '500x600', quality=99, format='JPEG')
-#         super(MyPhoto, self).save(*args, **kwargs)
+    # class MyPhoto(models.Model):
+    #     image = ImageField()
+    #
+    #     def save(self, *args, **kwargs):
+    #         if self.image:
+    #             self.image = get_thumbnail(self.image, '500x600', quality=99, format='JPEG')
+    #         super(MyPhoto, self).save(*args, **kwargs)
 
     # def save(self, *args, **kwargs):
     #     try:

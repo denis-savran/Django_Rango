@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.decorators.http import require_GET, require_safe
+from django.http import HttpResponse
 from django.views.generic import ListView
 from elasticsearch_dsl.query import Q
 from registration.backends.simple.views import RegistrationView
@@ -171,3 +172,14 @@ class MyRegistrationView(RegistrationView):
         # Add GET parameter to get customized edit_profile
         redirect_link = redirect_link + '?new_user=1'
         return redirect_link
+
+
+@login_required
+@require_GET
+def like_category(request):
+    category_id = request.GET.get('category_id')
+    category = get_object_or_404(Category, id=int(category_id))
+    category.add_like()
+    category.save()
+    return HttpResponse(category.likes)
+
