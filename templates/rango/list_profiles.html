@@ -9,11 +9,11 @@
   <h1 class="jumbotron">The List of Rango Members</h1>
   <ul class="list-group">
     {% for member in object_list %}
-      <li class="list-group-item d-flex flex-row text-center">
-        <div class="col-6">
+      <li class="list-group-item d-flex justify-content-center text-center">
+        <div class="col-3">
           <img width="200px" src="{{ MEDIA_URL }}{{ member.userprofile.picture }}" alt="Profile Image">
         </div>
-        <div class="col-6">
+        <div class="col-3">
           <a class="page-link" href="{% url 'show_profile' member.username %}">{{ member }}</a>
         </div>
       </li>

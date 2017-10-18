@@ -78,13 +78,8 @@ def add_page(request, category_name_slug):
 
 @require_GET
 def show_profile(request, username):
-    user = get_object_or_404(User, username=username)
-    try:
-        user_profile = UserProfile.objects.get(user=user)
-    except UserProfile.DoesNotExist:
-        user_profile = None
-    context_dict = {'user_profile': user_profile,
-                    'username': username}
+    profile_owner = get_object_or_404(User, username=username)
+    context_dict = {'profile_owner': profile_owner}
 
     return render(request, 'rango/profile.html', context=context_dict)
 

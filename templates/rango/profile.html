@@ -7,15 +7,15 @@
 
 {% block body_block %}
   <h1 class="jumbotron">Profile</h1>
-  {% if user_profile.picture %}
-    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture">
+  {% if profile_owner.userprofile.picture %}
+    <img src="{{ MEDIA_URL }}{{ profile_owner.userprofile.picture }}" alt="Profile picture">
   {% endif %}
-  <p>User: {{ username }}</p>
-  <p>Email: {{ user.email }}</p>
-  {% if user_profile.website %}
-    <p>Website: {{ user_profile.website }}</p>
+  <p>User: {{ profile_owner }}</p>
+  <p>Email: {{ profile_owner.email }}</p>
+  {% if profile_owner.userprofile.website %}
+    <p>Website: {{ profile_owner.userprofile.website }}</p>
   {% endif %}
-  {% if user.is_authenticated and user.username == username %}
+  {% if user.is_authenticated and user == profile_owner %}
     <p><a href="{% url 'edit_profile' %}">Edit profile</a></p>
     <p><a href="{% url 'auth_password_change' %}">Change password</a></p>
   {% endif %}
