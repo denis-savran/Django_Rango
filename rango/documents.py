@@ -1,13 +1,13 @@
 from collections import defaultdict
 
+from django.conf import settings
 from django.db.models import Case, When
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.connections import connections
 
-from Django_Rango.settings import ELASTICSEARCH_DSL
-from rango.models import Category, Page
+from .models import Category, Page
 
-connections.create_connection(hosts=[ELASTICSEARCH_DSL['default']['hosts']])
+connections.create_connection(hosts=[settings.ELASTICSEARCH_DSL['default']['hosts']])
 
 index_name = 'rango'
 rango = Index(index_name)

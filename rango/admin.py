@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from rango.models import Category, Page, UserProfile
+from .models import Category, Page, UserProfile
 
 
 class CategoryAdmin(admin.ModelAdmin):

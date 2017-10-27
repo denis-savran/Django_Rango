@@ -56,21 +56,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-    # class MyPhoto(models.Model):
-    #     image = ImageField()
-    #
-    #     def save(self, *args, **kwargs):
-    #         if self.image:
-    #             self.image = get_thumbnail(self.image, '500x600', quality=99, format='JPEG')
-    #         super(MyPhoto, self).save(*args, **kwargs)
-
-    # def save(self, *args, **kwargs):
-    #     try:
-    #         this = UserProfile.objects.get(id=self.id)
-    #         if this.picture:
-    #             this.picture.delete()
-    #         print('Success OMG!')
-    #     except UserProfile.DoesNotExist:
-    #         pass
-    #     super(UserProfile, self).save(*args, **kwargs)

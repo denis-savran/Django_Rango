@@ -1,17 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.decorators.http import require_GET, require_safe
-from django.http import HttpResponse
 from django.views.generic import ListView
 from elasticsearch_dsl.query import Q
 from registration.backends.simple.views import RegistrationView
 
-from rango.documents import (CategoryDocument, PageDocument,
-                             search_all_doc_types)
-from rango.forms import CategoryForm, PageForm, UserProfileForm
-from rango.models import Category, Page, UserProfile
-from rango.utils import resize_image, visitor_cookie_handler
+from .documents import CategoryDocument, PageDocument, search_all_doc_types
+from .forms import CategoryForm, PageForm, UserProfileForm
+from .models import Category, Page, UserProfile
+from .utils import resize_image, visitor_cookie_handler
 
 
 @require_safe
@@ -67,7 +66,7 @@ def add_page(request, category_name_slug):
     if request.method == 'POST':
         form = PageForm(request.POST)
         if form.is_valid():
-            page = form.save()
+            form.save()
             return redirect('show_category', category_name_slug)
         else:
             print(form.errors)
@@ -182,4 +181,3 @@ def like_category(request):
     category.add_like()
     category.save()
     return HttpResponse(category.likes)
-

@@ -1,8 +1,8 @@
 from datetime import datetime
 from io import BytesIO
 
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 def get_server_side_cookie(request, cookie, default_val=None):

@@ -24,9 +24,9 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^rango/', include('rango.urls')),
     url(r'^admin/', admin.site.urls),
-    # url(r'^accounts/register/$', views.MyRegistrationView.as_view(), name='registration_register'),
-    # url(r'^accounts/password/change/$', views.MyPasswordChangeView.as_view(), name='auth_password_change'),
-    # url(r'^accounts/logout/$', views.MyLogoutView.as_view(), name='auth_logout'),
     url(r'^accounts/register/', views.MyRegistrationView.as_view(), name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# Add serving of media files
+urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
