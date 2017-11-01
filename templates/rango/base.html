@@ -3,39 +3,79 @@
 {% load rango_template_tags %}
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>
-    Rango -
-    {% block title_block %}
-      How to Tango with Django!
-    {% endblock %}
-  </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="{% static 'rango/img/chamelion.svg' %}">
+
+  <title>{% block title_block %}Rango{% endblock %}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'rango/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'rango/css/dashboard.css' %}" rel="stylesheet">
 </head>
+
 <body>
-<div>
-  {% block body_block %}
-    This is body_block's default content.
-  {% endblock %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbar"
+          aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="{% url 'index' %}">Rango</a>
+  <div class="collapse navbar-collapse" id="navbar">
+    <ul class="navbar-nav mr-auto">
+      {% with request.resolver_match.url_name as current_url_name %}
+        {% dynamic_nav_item current_url_name 'index' 'Home' %}
+
+        {% if user.is_authenticated %}
+          {% dynamic_nav_item current_url_name 'add_category' 'Add Category' %}
+          {% dynamic_nav_item current_url_name 'show_profile' 'Profile' user.username %}
+          {# There is no logout page so it can be left static, also we need to specify a redirect link #}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'auth_logout' %}?next={% url 'index' %}">Sing out</a>
+          </li>
+        {% else %}
+          {% dynamic_nav_item current_url_name 'auth_login' 'Sing in' %}
+          {% dynamic_nav_item current_url_name 'registration_register' 'Register' %}
+        {% endif %}
+
+        {% dynamic_nav_item current_url_name 'show_members' 'Members' %}
+        {% dynamic_nav_item current_url_name 'about' 'About' %}
+      {% endwith %}
+    </ul>
+    <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'search' %}">
+      <input class="form-control mr-sm-2" name="q" type="text" value="{{ request.GET.q }}"
+             placeholder="Search everywhere" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
+      {% block sidebar_block %}
+        {% get_category_list %}
+      {% endblock %}
+    </nav>
+
+    <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
+      {% block body_block %}{% endblock %}
+    </main>
+  </div>
 </div>
-<div>
-  {% block sidebar_block %}
-    {% get_category_list category %}
-  {% endblock %}
-</div>
-<hr>
-<div>
-  <ul>
-    <li><a href="{% url 'index' %}">Index</a></li>
-    {% if user.is_authenticated %}
-      <li><a href="{% url 'add_category' %}">Add new Category</a></li>
-      <li><a href="{% url 'show_profile' %}">Profile</a></li>
-      <li><a href="{% url 'auth_logout' %}?next={% url 'index' %}">Logout</a></li>
-    {% else %}
-      <li><a href="{% url 'auth_login' %}">Login</a></li>
-      <li><a href="{% url 'registration_register' %}">Sing Up</a></li>
-    {% endif %}
-    <li><a href="{% url 'about' %}">About</a></li>
-  </ul>
-</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static 'rango/js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'rango/js/rango-ajax.js' %}"></script>
+<script src="{% static 'rango/js/bootstrap.min.js' %}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{% static 'rango/js/ie10-viewport-bug-workaround.js' %}">
+</script>
 </body>
 </html>
