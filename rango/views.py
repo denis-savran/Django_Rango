@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.decorators.http import require_GET, require_safe
 from django.views.generic import ListView
@@ -181,3 +181,23 @@ def like_category(request):
     category.add_like()
     category.save()
     return HttpResponse(category.likes)
+
+
+@require_GET
+def suggest_search(request):
+    q = request.GET.get('q')
+    if q:
+        search_result = search_all_doc_types(q, subdivide=False)
+    else:
+        return Http404
+    return render(request, 'rango/search_suggestions.html', {'search_result': search_result})
+
+
+@require_GET
+def suggest_category(request):
+    category_partial_name = request.GET.get('starts_with')
+    if category_partial_name:
+        category_list = Category.get_most_viewed(starts_with=category_partial_name, max_results=8)
+    else:
+        category_list = Category.get_most_viewed()
+    return render(request, 'rango/cats.html', {'cats': category_list})

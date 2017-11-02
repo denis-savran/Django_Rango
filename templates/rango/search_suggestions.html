@@ -1,0 +1,11 @@
+<ul class="list-group" style="position: absolute;">
+  {% if search_result %}
+    {% for model, qs in search_result %}
+      {% for item in qs %}
+        <li class="list-group-item p-0">
+          <a class="nav-link p-3" href="{{ item.get_url }}">{{ item }}</a>
+        </li>
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+</ul>

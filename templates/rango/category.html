@@ -19,7 +19,9 @@
         </div>
         <div class="col-3 d-flex justify-content-between p-1">
           <div class="p-2">
-            This category has <span class="text-info" id="like_count">{{ category.likes }}</span> like{{ category.likes|pluralize }}
+            This category has
+            <span class="text-info" id="like_count">{{ category.likes }}</span>
+            like{{ category.likes|pluralize }}
           </div>
           {% if user.is_authenticated %}
             <div>

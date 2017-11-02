@@ -24,8 +24,8 @@ class Category(models.Model):
         self.likes += 1
 
     @classmethod
-    def get_most_viewed(cls):
-        return cls.objects.order_by('-views')[:5]
+    def get_most_viewed(cls, *, max_results=5, **kwargs):
+        return cls.objects.filter(**kwargs).order_by('-views')[:max_results]
 
     class Meta:
         verbose_name_plural = 'categories'
@@ -44,8 +44,8 @@ class Page(models.Model):
         return self.url
 
     @classmethod
-    def get_most_viewed(cls):
-        return cls.objects.order_by('-views')[:5]
+    def get_most_viewed(cls, *, max_results=5, **kwargs):
+        return cls.objects.filter(**kwargs).order_by('-views')[:max_results]
 
 
 class UserProfile(models.Model):

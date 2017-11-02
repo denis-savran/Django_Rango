@@ -46,20 +46,33 @@
         {% dynamic_nav_item current_url_name 'about' 'About' %}
       {% endwith %}
     </ul>
-    <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'search' %}">
-      <input class="form-control mr-sm-2" name="q" type="text" value="{{ request.GET.q }}"
-             placeholder="Search everywhere" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    <div class="search">
+      <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'search' %}">
+        <input id="search-input" class="form-control mr-sm-2" name="q" type="text" value="{{ request.GET.q }}"
+               placeholder="Search everywhere" aria-label="Search" autocomplete="off">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+      <div id="search-suggestions"></div>
+    </div>
   </div>
 </nav>
 
 <div class="container-fluid">
   <div class="row">
     <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
-      {% block sidebar_block %}
-        {% get_category_list %}
-      {% endblock %}
+      <div class="col-12">
+        <form method="get">
+          <label for="search-category">Filter categories</label>
+          <input class="search-query form-control" type="text"
+                 name="suggestion" value="" id="search-category"/>
+        </form>
+      </div>
+      <hr>
+      <div id="side-bar-categories">
+        {% block sidebar_block %}
+          {% get_category_list %}
+        {% endblock %}
+      </div>
     </nav>
 
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">

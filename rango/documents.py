@@ -1,4 +1,5 @@
 from collections import defaultdict
+from itertools import chain
 
 from django.conf import settings
 from django.db.models import Case, When
@@ -27,6 +28,9 @@ class CategoryDocument(DocType):
             'name'
         ]
 
+    def __str__(self):
+        return self.name
+
 
 @rango.doc_type
 class PageDocument(DocType):
@@ -42,6 +46,9 @@ class PageDocument(DocType):
         ]
         related_models = [Category]
 
+    def __str__(self):
+        return self.title
+
 
 def get_qs_with_specified_order(model, order):
     qs = model.objects.filter(pk__in=order)
@@ -51,7 +58,7 @@ def get_qs_with_specified_order(model, order):
     return qs.order_by(preserved_order)
 
 
-def search_all_doc_types(search_text):
+def search_all_doc_types(search_text, *, subdivide=True):
     search_result = rango.search().filter('match', _all=search_text)
 
     hit_dict = defaultdict(lambda: [])
@@ -66,5 +73,10 @@ def search_all_doc_types(search_text):
         if doc_type == 'page_document':
             model = Page
             context_dict_key = 'pages'
-        result[context_dict_key] = get_qs_with_specified_order(model, ids)
+        query_set = get_qs_with_specified_order(model, ids)
+        result[context_dict_key] = query_set
+
+    if not subdivide:
+        result = list(chain(item for item in result.items()))
+
     return result

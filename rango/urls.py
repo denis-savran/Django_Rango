@@ -16,4 +16,6 @@ urlpatterns = [
     url(r'^members/$', views.ShowMembersView.as_view(), name='show_members'),
     url(r'^search/$', views.search, name='search'),
     url(r'^goto/$', views.track_url, name='goto'),
+    url(r'^suggest_search/$', views.suggest_search, name='suggest_search'),
+    url(r'^suggest_category/$', views.suggest_category, name='suggest_category'),
 ]
