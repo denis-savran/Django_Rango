@@ -195,9 +195,9 @@ def suggest_search(request):
 
 @require_GET
 def suggest_category(request):
-    category_partial_name = request.GET.get('starts_with')
-    if category_partial_name:
-        category_list = Category.get_most_viewed(starts_with=category_partial_name, max_results=8)
+    starts_with = request.GET.get('starts_with')
+    if starts_with:
+        category_list = Category.get_most_viewed(name__istartswith=starts_with, max_results=8)
     else:
         category_list = Category.get_most_viewed()
-    return render(request, 'rango/cats.html', {'cats': category_list})
+    return render(request, 'rango/cats.html', context={'cats': category_list})

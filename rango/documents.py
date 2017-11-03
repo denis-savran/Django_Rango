@@ -77,6 +77,6 @@ def search_all_doc_types(search_text, *, subdivide=True):
         result[context_dict_key] = query_set
 
     if not subdivide:
-        result = list(chain(item for item in result.items()))
+        result = list(chain(qs for qs in result.values()))
 
     return result
