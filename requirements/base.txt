@@ -1,4 +1,4 @@
-Django==1.11.6
+Django==1.11.29
 django-elasticsearch-dsl==0.4.0
 django-registration-redux==1.8
 elasticsearch==5.4.0
